@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Chat App</title>
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <input type="hidden" name="user_id" id="loggedin-user" value="{{ user.id }}" />
+    {% endif %}
+    
+    <section class="container">
+        <div class="top-bar">
+            <center><span>Chat App by Zeeshan Manzoor</span></center>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="left">
+                {% block left %}{% endblock left %}
+            </div>
+            <div class="right">
+                {% block right %}{% endblock right %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static 'main/js/script.js' %}"></script>
+</body>
+</html>
