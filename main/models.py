@@ -23,6 +23,16 @@ class ThreadManager(models.Manager):
         
         return query
 
+    def get_thread(self, **kwargs):
+        user1 = kwargs.get('user1')
+        user2 = kwargs.get('user2')
+        query = self.get_queryset().filter(
+            models.Q(first_user=user1, second_user=user2) |
+            models.Q(first_user=user2, second_user=user1)
+        ).distinct()
+
+        return query
+
 class Thread(models.Model):
     first_user = models.ForeignKey(Member, on_delete=models.CASCADE, null=True, blank=True, related_name='thread_first_person')
     second_user = models.ForeignKey(Member, on_delete=models.CASCADE, null=True, blank=True, related_name='thread_second_person')

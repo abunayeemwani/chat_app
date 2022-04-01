@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup | Chat App</title>
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'main/css/login_style.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <div class="inner-container" id="login-container">
+            <h3>Login</h3>
+            <span>Chat App</span>
+            <p style="color: red;">{{err}}</p>
+            <br>
+            <div class="form-container">
+                <form method="post" action="" name="login">
+                    {% csrf_token %}
+                    <label for="login-username">Username:*</label>
+                    <input type="text" id="login-username" name="username" placeholder="Username" required/>
+                    <label for="login-password">Password:*</label>
+                    <input type="password" id="login-password" name="password" placeholder="Password" required/>
+                    <br>
+                    <input type="submit" name="login" value="Login" />
+                </form>
+            </div>
+        </div>
+        <div class="inner-container" id="signup-container">
+            <h3>Signup</h3>
+            <span>Chat App</span>
+            <div class="form-container">
+                <form method="post" action="" enctype="multipart/form-data" name="signup">
+                    {% csrf_token %}
+                    <label for="signup-fname">First Name:*</label>
+                    <input type="text" id="signup-fname" name="fname" placeholder="First Name" required/>
+                    <label for="signup-lname">Last Name:</label>
+                    <input type="text" id="signup-lname" name="lname" placeholder="Last Name"/>
+                    <label for="signup-username">Username:*</label>
+                    <input type="text" id="signup-username" name="username" placeholder="Username" required/>
+                    <label for="signup-email">Email:*</label>
+                    <input type="email" id="signup-email" name="email" placeholder="Email" required/>
+                    <label for="signup-password">Password:*</label>
+                    <input type="password" id="signup-password" name="password" placeholder="Password" required/>
+                    <label for="signup-image">Profile Image:</label>
+                    <input type="file" id="signup-image" name="image" />
+
+                    <input type="submit" name="signup" value="Signup" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

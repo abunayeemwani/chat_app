@@ -15,36 +15,68 @@ let wsURL = wsPre + loc.host + loc.pathname
 
 var socket = new WebSocket(wsURL)
 
+
+
+
 socket.onopen = async function(e){
-    console.log("open")
+    // Click user
+    $('.friend').on('click', function(){
+        $('.friend.active-friend').removeClass('active-friend')
+        $(this).addClass('active-friend')
+        
+        let user_id = $(this).attr('user-id')
+        let data_type = "user"
+        
+        let data = {
+            'data_type': data_type,
+            'user_id': user_id
+        }
+        data = JSON.stringify(data)
+        socket.send(data)
+    })
+
+    // Submit form
     message_form.on('submit', function(e){
-        console.log("submit")
         e.preventDefault()
         let message = input_message.val()
         let sent_by = USER_ID
-        let send_to = get_other_user_id()
-        let thread_id = get_active_thread_id()
+        let send_to = $('.right-body').attr('other-user-id')
+        let data_type = "message"
 
         let data = {
+            'data_type': data_type,
             'message': message,
             'sent_by': sent_by,
-            'send_to': send_to,
-            'thread_id': thread_id
+            'send_to': send_to
         }
         data = JSON.stringify(data)
         socket.send(data)
         $(this)[0].reset()
     })
+
 }
 
 socket.onmessage = async function(e){
-    console.log("on message")
     let data = JSON.parse(e.data)
-    let message = data['message']
-    let sent_by = data['sent_by']
-    let thread_id = data['thread_id']
 
-    newMessage(message, sent_by, thread_id)
+    if(data['data_type'] === "message"){
+        let message = data['message']
+        let sent_by = data['sent_by']
+
+        newMessage(message, sent_by)
+    }
+    else{
+        let id = data['id']
+        let image = data['image']
+        let name = data['name']
+        showUser(id, image, name)
+
+        if(data['messages'] != ""){
+            for(let i=0; i<data['messages'].length; i++){
+                newMessage(data['messages'][i][1], data['messages'][i][0], data['messages'][i][2])
+            }
+        }
+    }
 }
 
 socket.onerror = async function(e){
@@ -55,69 +87,89 @@ socket.onclose = async function(e){
     console.log('Close', e)
 }
 
-function newMessage(message, sent_by, thread_id){
-    console.log("New message")
-    console.log(message)
+
+
+
+
+function newMessage(message, sent_by, date="Today, "+new Date().getHours()+":"+new Date().getMinutes()){
     if($.trim(message) === ''){
         return false
     }
 
-    let currentDate = new Date()
-    let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes();
-
     let message_element;
+    let message_body;
     if(sent_by == USER_ID){
         message_element = `
         <div class="message sent">
             <p>${message}</p>
-            <span>Today, ${currentTime}</span>
+            <span>${date}</span>
         </div>
-        `;
+        `
+        message_body = $('.right-body')
     }
     else{
         message_element = `
         <div class="message received">
             <p>${message}</p>
-            <span>Today, ${currentTime}</span>
+            <span>${date}</span>
         </div>
-        `;
+        `
+        message_body = $('.right-body[other-user-id="' + sent_by + '"]')
     }
 
-    let message_body = $('.right-container[thread-id="' + thread_id + '"] .right-body')
     message_body.append(message_element)
     message_body.animate({
-        scrollTop: $(document).height()
-    }, 300);
+        scrollTop: message_body.get(0).scrollHeight
+    }, 10);
 	input_message.val(null);
 }
+
+
+
+
+
+function showUser(id, image, name){
+    let user_element = `
+    <div class="right-top" other-user-id="${id}">
+        <img src="media/${image}" />
+        <h4>${name}</h4>
+    </div>
+    <div class="right-body" other-user-id="${id}">
+        
+    </div>
+    `
+
+    $('.right-container').html(user_element)
+
+}
+
+
 
 
 
 function showFriends(){
     document.getElementById("friends").classList.add("active")
     document.getElementById("connect").classList.remove("active")
+    document.getElementById("menu").classList.remove("active")
 }
 
 function showConnect(){
     document.getElementById("friends").classList.remove("active")
+    document.getElementById("menu").classList.remove("active")
     document.getElementById("connect").classList.add("active")
 }
 
-$('.friend').on('click', function(){
-    $('.friend.active-friend').removeClass('active-friend')
-    $(this).addClass('active-friend')
+function showMenu(x) {
+    x.classList.toggle("change");
 
-    let thread_id = $(this).attr('thread-id')
-    $('.right-container.active').removeClass('active')
-    $('.right-container[thread-id="' + thread_id + '"]').addClass('active')
-})
-
-function get_other_user_id(){
-    let other_user_id = $.trim($('.right-container.active').attr('other-user-id'))
-    return other_user_id
-}
-
-function get_active_thread_id(){
-    let active_thread_id = $.trim($('.right-container.active').attr('thread-id'))
-    return active_thread_id
+    if(document.getElementById("menu").classList.contains("active")){
+        document.getElementById("friends").classList.add("active")
+        document.getElementById("connect").classList.remove("active")
+        document.getElementById("menu").classList.remove("active")
+    }
+    else{
+        document.getElementById("friends").classList.remove("active")
+        document.getElementById("connect").classList.remove("active")
+        document.getElementById("menu").classList.add("active")
+    }
 }

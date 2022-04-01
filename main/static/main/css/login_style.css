@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+body{
+    height: 100vh;
+    background: #e3e3e3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #fff;
+    box-shadow: 0px 0px 10px #666;
+}
+
+.inner-container{
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#signup-container{
+    background: linear-gradient(#e66465, #9198e5);
+}
+
+.inner-container span{
+    font-style: italic;
+    font-size: 12px;
+    color: #333;
+    margin: 10px;
+}
+
+.form-container{
+    width: 100%;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+input{
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 12px;
+    border: none;
+    outline: none;
+    box-shadow: 0px 0px 10px #999;
+}
+
+input[type="submit"]{
+    background: blueviolet;
+    color: #fff;
+    font-weight: 600;
+    padding: 8px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover{
+    box-shadow: 0px 0px 0px #000;
+}
+
+@media screen and (max-width: 768px){
+    .container{
+        width: 90%;
+    }
+}

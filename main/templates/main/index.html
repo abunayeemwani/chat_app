@@ -5,6 +5,11 @@
 {% block left %}
 
 <div class="left-top">
+    <div class="hum-container" onclick="showMenu(this)">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+    </div>
     <input type="search" name="search" placeholder="Search Friends" />
 </div>
 
@@ -13,7 +18,7 @@
 <div class="left-body">
     <div class="friends active" id="friends">
         {% for thread in threads %}
-        <div class="friend {% if forloop.counter == 1 %}active-friend{% endif %}" thread-id="{{ thread.id }}">
+        <div class="friend" user-id="{% if thread.first_user == user %}{{ thread.second_user.id }}{% else %}{{ thread.first_user.id }}{% endif %}">
             <img src="media/{% if thread.first_user == user %}{{ thread.second_user.image }}{% else %}{{ thread.first_user.image }}{% endif %}" />
             <h4>
                 {% if thread.first_user == user %}
@@ -34,6 +39,15 @@
         </div>
         {% endfor %}
     </div>
+
+    <div class="friends" id="menu">
+        <div>
+            <a href="#">My Profile</a>
+        </div>
+        <div>
+            <a href="logout">Logout</a>
+        </div>
+    </div>
 </div>
 
 
@@ -51,28 +65,9 @@
 <!-- Chat Box -->
 {% block right %}
 <div class="messages-container">
-    {% for thread in threads %}
-    <div class="right-container {% if forloop.counter == 1 %}active{% endif %}" thread-id="{{ thread.id }}" other-user-id="{% if thread.first_user == user %}{{ thread.second_user.id }}{% else %}{{ thread.first_user.id }}{% endif %}">
-        <div class="right-top">
-            <img src="media/{% if thread.first_user == user %}{{ thread.second_user.image }}{% else %}{{ thread.first_user.image }}{% endif %}" />
-            <h4>
-                {% if thread.first_user == user %}
-                {{ thread.second_user.first_name }} {{ thread.second_user.last_name }}
-                {% else %}
-                {{ thread.first_user.first_name }} {{ thread.first_user.last_name }}
-                {% endif %}
-            </h4>
-        </div>
-        <div class="right-body">
-            {% for message in thread.message_thread.all %}
-            <div class="message {% if message.user == user %}sent{% else %}received{% endif %}">
-                <p>{{ message.message }}</p>
-                <span>{{ message.date }}</span>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="right-container">
+        
     </div>
-    {% endfor %}
 </div>
 
 <div class="right-footer">
